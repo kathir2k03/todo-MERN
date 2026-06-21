@@ -1,0 +1,16 @@
+{
+  "name": "ToDo backend",
+  "version": "1.0.0",
+  "description": "ToDo List project for leanring",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kathir",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.7.1",
+    "nodemon": "^3.1.14"
+  }
+}
