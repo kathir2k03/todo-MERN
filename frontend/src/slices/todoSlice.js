@@ -119,7 +119,7 @@ const todoSlice = createSlice({
 const {actions, reducer} = todoSlice
 
 export const {
-todosRequest, todosSuccess, todosFail, createTodoRequest, createTodoSuccess, createTodoFail, todoRequest, todoSucces, todoFail, deleteTodoRequest, deleteTodoSuccess, deleteTodoFail, updateTodoRequest, updateTodoFail, clearTodoValues
+todosRequest, todosSuccess, todosFail, createTodoRequest, createTodoSuccess, createTodoFail, todoRequest, todoSucces, todoFail, deleteTodoRequest, deleteTodoSuccess, deleteTodoFail, updateTodoRequest, updateTodoFail, clearTodoValues, updateTodoSuccess
 } = actions
 
 export default reducer
