@@ -118,4 +118,10 @@ app.delete("/todo/:id", async(req, res) => {
     }
 })
 
+app.get("/test", (req, res) => {
+  res.json({
+    mongoUriExists: !!process.env.MONGO_URI
+  });
+});
+
 module.exports = app;
