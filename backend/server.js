@@ -2,6 +2,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+require('dotenv').config();
 // create an Instance of express
 const app = express()
 app.use(express.json())
@@ -9,7 +10,7 @@ app.use(cors())
 //sample in-memory storage for todo items
 // let todos = [];
 
-mongoose.connect('mongodb://localhost:27017/ToDo-datas')
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('DB Connected!')
     })
@@ -117,7 +118,4 @@ app.delete("/todo/:id", async(req, res) => {
     }
 })
 
-const PORT = 3000
-app.listen(PORT, () => {
-    console.log("server Listening to Port +", PORT)
-})
+module.exports = app;
