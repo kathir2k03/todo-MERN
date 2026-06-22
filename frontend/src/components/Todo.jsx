@@ -56,7 +56,7 @@ const Todo = () => {
 
   return (
     <section className="">
-      <div className="p-3 text-center bg-green-500 text-white font-medium">
+      <div className="p-3 text-center bg-blue-500 text-white font-medium">
         <h1 className="text-2xl md:text-3xl lg:text-4xl">Todo Project with MERN stack</h1>
       </div >
       <div className="p-3">
@@ -72,8 +72,8 @@ const Todo = () => {
             onChange={(e) => { setDescription(e.target.value) }} />
           </div>
 
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" type="submit" onClick={handleSubmit}>
-            Submit</button>
+          <button className="bg-green-500 hover:bg-green-300 text-white font-bold py-2 px-4 rounded" type="submit" onClick={handleSubmit}>
+            Create</button>
 
         </div>
         {error && <p className="text-red-500">{error}</p>}

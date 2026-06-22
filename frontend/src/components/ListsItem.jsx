@@ -83,7 +83,7 @@ function ListsItem() {
                             </div>
                             <div className="flex flex-col gap-2 sm:flex-row sm:min-w-[120px]">
                                 <button
-                                    className="px-1 sm:px-2 sm:py-1 bg-yellow-400 cursor-pointer rounded-[5px]"
+                                    className="px-1 sm:px-2 sm:py-1 bg-yellow-500 hover:bg-yellow-300 cursor-pointer rounded-[5px]"
                                     onClick={handleSubmit}
                                 >
                                     Update
@@ -106,14 +106,14 @@ function ListsItem() {
                             </div>
                             <div className="flex flex-col gap-2 sm:flex-row sm:min-w-[120px]">
                                 <button
-                                    className="px-1 sm:px-2 sm:py-1 bg-yellow-400 cursor-pointer rounded-[5px]"
+                                    className="px-1 sm:px-2 sm:py-1 bg-yellow-500 hover:bg-yellow-300 cursor-pointer rounded-[5px]"
                                     onClick={() => handleEdit(data._id, data.title, data.description)}
                                 >
                                     Edit
                                 </button>
 
                                 <button
-                                    className="bg-red-500 px-1 sm:px-2 sm:py-1 cursor-pointer text-white rounded-[5px]"
+                                    className="bg-red-500 hover:bg-red-300 px-1 sm:px-2 sm:py-1 cursor-pointer text-white rounded-[5px]"
                                     onClick={() => handleDelete(data._id, data.title)}
                                 >
                                     Delete
