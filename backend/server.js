@@ -1,9 +1,11 @@
 // using Express
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 // create an Instance of express
 const app = express()
 app.use(express.json())
+app.use(cors())
 //sample in-memory storage for todo items
 // let todos = [];
 
@@ -42,8 +44,11 @@ app.post('/todos', async (req, res) => {
     try {
         const newTodo = new todoModel({ title, description })
         await newTodo.save()
-        res.status(201).json(newTodo)
-    } catch (error) {
+res.status(201).json({
+  success: true,
+  message: "Item Successfully Added!",
+  todo: newTodo
+});    } catch (error) {
         console.log(error)
         res.status(500).json({message : error.message})
     }
@@ -57,6 +62,23 @@ app.get('/todos', async(req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({message : error.message})
+    }
+})
+
+//Get single Item
+app.get('/todo/:id', async(req, res) => {
+    try {
+    const id = req.params.id
+    if(!id) {
+        return res.status(404).json({message : "Bad Request"})
+    }
+    const getId = await todoModel.findById(id)
+    if(getId == null){
+       return res.status(404).json({message : "Invalid Id"}) 
+    }
+    res.status(200).json(getId)        
+    } catch (error) {
+     res.status(400).json({message : error.message})   
     }
 })
 
@@ -88,7 +110,7 @@ app.delete("/todo/:id", async(req, res) => {
     if(!deleted){
         return res.status(404).json({message : "Todo Not found"})
     }
-    res.status(201).json({message : "Item removed Successfully"})
+    res.status(201).json({message : "Item Successfully removed!"})
     }
     catch(error){
     res.status(500).json({messsage : error.message})
