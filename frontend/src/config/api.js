@@ -1,3 +1,3 @@
-const API = "http://localhost:3000";
+const API = "https://todo-mern-backend-pi.vercel.app";
 
 export default API;
