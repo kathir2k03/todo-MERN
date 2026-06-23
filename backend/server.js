@@ -10,25 +10,44 @@ app.use(cors())
 //sample in-memory storage for todo items
 // let todos = [];
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log('DB Connected!')
-    })
-    .catch((err) => {
-        console.log(err)
-    })
+let isConnected = false;
 
-    // creating schema 
+async function connectDB() {
+    if (isConnected) return;
+
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            bufferCommands: false
+        });
+
+        isConnected = true;
+        console.log("MongoDB Connected");
+    } catch (error) {
+        console.error("MongoDB Connection Error:", error);
+        throw error;
+    }
+}
+
+// creating schema 
 const todoSchema = new mongoose.Schema({
     title: {
-        type : String,
-        required : true
+        type: String,
+        required: true
     },
     description: String
 })
 
 // creating model
 const todoModel = mongoose.model('Todo', todoSchema)
+
+
+app.get("/", (req, res) => {
+
+    res.json({
+        success: true,
+        message: "Todo API Running"
+    });
+});
 
 // create a new todo item
 app.post('/todos', async (req, res) => {
@@ -43,94 +62,100 @@ app.post('/todos', async (req, res) => {
     // console.log(todos)
 
     try {
+        await connectDB()
         const newTodo = new todoModel({ title, description })
         await newTodo.save()
-res.status(201).json({
-  success: true,
-  message: "Item Successfully Added!",
-  todo: newTodo
-});    } catch (error) {
+        res.status(201).json({
+            success: true,
+            message: "Item Successfully Added!",
+            todo: newTodo
+        });
+    } catch (error) {
         console.log(error)
-        res.status(500).json({message : error.message})
+        res.status(500).json({ message: error.message })
     }
 })
 
 //Get all Items
-app.get('/todos', async(req, res) => {
+app.get('/todos', async (req, res) => {
     try {
+        await connectDB()
         const newTodo = await todoModel.find()
         res.status(200).json(newTodo)
     } catch (error) {
         console.log(error)
-        res.status(500).json({message : error.message})
+        res.status(500).json({ message: error.message })
     }
 })
 
 //Get single Item
-app.get('/todo/:id', async(req, res) => {
+app.get('/todo/:id', async (req, res) => {
     try {
-    const id = req.params.id
-    if(!id) {
-        return res.status(404).json({message : "Bad Request"})
-    }
-    const getId = await todoModel.findById(id)
-    if(getId == null){
-       return res.status(404).json({message : "Invalid Id"}) 
-    }
-    res.status(200).json(getId)        
+        await connectDB();
+        const id = req.params.id
+        if (!id) {
+            return res.status(404).json({ message: "Bad Request" })
+        }
+        const getId = await todoModel.findById(id)
+        if (getId == null) {
+            return res.status(404).json({ message: "Invalid Id" })
+        }
+        res.status(200).json(getId)
     } catch (error) {
-     res.status(400).json({message : error.message})   
+        res.status(400).json({ message: error.message })
     }
 })
 
 // Update a TODO Item
-app.put("/todo/:id", async(req,res) => {
+app.put("/todo/:id", async (req, res) => {
     try {
-    const {title, description} = req.body
-    const id = req.params.id;
-    const updatedTodo = await todoModel.findByIdAndUpdate(
-    id,
-    { title, description},
-    {new : true}
-    )
-    if (!updatedTodo){
-        return res.status(404).json({message : "Todo not found"})
-    }
-    res.json(updatedTodo)        
+        await connectDB();
+        const { title, description } = req.body
+        const id = req.params.id;
+        const updatedTodo = await todoModel.findByIdAndUpdate(
+            id,
+            { title, description },
+            { new: true }
+        )
+        if (!updatedTodo) {
+            return res.status(404).json({ message: "Todo not found" })
+        }
+        res.json(updatedTodo)
     } catch (error) {
         console.log(error)
-        res.status(500).json({message : error.message})
+        res.status(500).json({ message: error.message })
     }
 })
 
 // Delete a todo item
-app.delete("/todo/:id", async(req, res) => {
-    try{
-    const id = req.params.id
-    const deleted = await todoModel.findByIdAndDelete(id)
-    if(!deleted){
-        return res.status(404).json({message : "Todo Not found"})
+app.delete("/todo/:id", async (req, res) => {
+    try {
+        await connectDB();
+        const id = req.params.id
+        const deleted = await todoModel.findByIdAndDelete(id)
+        if (!deleted) {
+            return res.status(404).json({ message: "Todo Not found" })
+        }
+        res.status(201).json({ message: "Item Successfully removed!" })
     }
-    res.status(201).json({message : "Item Successfully removed!"})
-    }
-    catch(error){
-    res.status(500).json({messsage : error.message})
+    catch (error) {
+        res.status(500).json({ messsage: error.message })
     }
 })
 
 app.get("/test", (req, res) => {
-  res.json({
-    mongoUriExists: !!process.env.MONGO_URI
-  });
+    res.json({
+        mongoUriExists: !!process.env.MONGO_URI
+    });
 });
 
 
 if (process.env.VERCEL !== "1") {
-  const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3000;
 
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 }
 
 module.exports = app;
